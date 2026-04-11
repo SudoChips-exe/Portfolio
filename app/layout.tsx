@@ -8,9 +8,6 @@ const mono = JetBrains_Mono({ variable: "--font-mono", subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Chibueze Emmanuel Amechi | Full-Stack Developer",
   description: "Portfolio of Chibueze Emmanuel Amechi — Full-Stack Developer, Systems Programmer & Data Analyst",
-  icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
