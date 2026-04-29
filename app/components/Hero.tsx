@@ -2,10 +2,7 @@
 import { useEffect, useState } from "react";
 
 const roles = [
-  "Full-Stack Developer",
-  "Systems Programmer",
-  "Data Analyst",
-  "Compiler Engineer",
+  "Software & systems Engineer" , 
 ];
 
 export default function Hero() {
