@@ -38,6 +38,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+# me being me
 next-env.d.ts
 claude.md
 .gitignore
