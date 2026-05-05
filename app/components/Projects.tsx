@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import CopyablePre from "./CopyablePre";
 import { SectionHeader } from "./About";
 
 export interface Project {
@@ -244,9 +245,10 @@ export default function Projects() {
                   <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">Architecture</h4>
                   <p className="mb-4">{activeProject.caseStudy.architecture}</p>
                   {activeProject.caseStudy.architectureDiagram && (
-                    <pre className="bg-[#080d18]/50 border border-slate-800/50 p-4 rounded-lg overflow-x-auto text-[13px] font-mono text-slate-400 leading-snug">
-                      <code>{activeProject.caseStudy.architectureDiagram}</code>
-                    </pre>
+                    <CopyablePre 
+                      code={activeProject.caseStudy.architectureDiagram} 
+                      className="bg-[#080d18]/50 border border-slate-800/50 p-4 rounded-lg overflow-x-auto text-[13px] font-mono text-slate-400 leading-snug"
+                    />
                   )}
                 </div>
                 
@@ -259,12 +261,13 @@ export default function Projects() {
                 
                 {activeProject.caseStudy.codeSnippet && (
                   <div>
-                    <h4 className="text-sky-400 font-medium mb-3 uppercase tracking-wider text-[13px]">
-                      Proof of Work {activeProject.caseStudy.snippetTitle && <span className="text-slate-500">— {activeProject.caseStudy.snippetTitle}</span>}
+                    <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">
+                      {activeProject.caseStudy.snippetTitle || "Proof of Work"}
                     </h4>
-                    <pre className="bg-[#080d18] border border-slate-800 p-5 rounded-lg overflow-x-auto text-sm font-mono text-sky-200">
-                      <code>{activeProject.caseStudy.codeSnippet}</code>
-                    </pre>
+                    <CopyablePre 
+                      code={activeProject.caseStudy.codeSnippet}
+                      className="bg-[#080d18] border border-slate-800 p-4 rounded-lg overflow-x-auto text-[13px] font-mono text-slate-300 leading-relaxed shadow-inner"
+                    />
                   </div>
                 )}
               </div>
