@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 type Command = {
   id: string;
   title: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   action: () => void;
 };
 
