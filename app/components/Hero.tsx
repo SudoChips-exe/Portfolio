@@ -1,9 +1,28 @@
 "use client";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const updateMousePosition = (ev: MouseEvent) => {
+      setMousePosition({ x: ev.clientX, y: ev.clientY });
+    };
+    window.addEventListener("mousemove", updateMousePosition);
+    return () => window.removeEventListener("mousemove", updateMousePosition);
+  }, []);
+
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#080d18]">
-
+      {/* Professional Interactive Spotlight */}
+      <div 
+        className="pointer-events-none absolute inset-0 z-0 transition-all duration-300 ease-out"
+        style={{
+          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(56, 189, 248, 0.08), transparent 80%)`,
+        }}
+      />
+      {/* Subtle Background Grid */}
+      <div className="absolute inset-0 z-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24">
         <h1 className="text-5xl md:text-[4.5rem] font-bold text-white leading-[1.1] tracking-tight mb-4">

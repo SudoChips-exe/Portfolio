@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import { SectionHeader } from "./About";
 
 export interface Project {
@@ -6,6 +8,12 @@ export interface Project {
   tags: string[];
   github?: string;
   live?: string;
+  caseStudy?: {
+    problem: string;
+    architecture: string;
+    snippetTitle?: string;
+    codeSnippet?: string;
+  };
 }
 
 const projects: Project[] = [
@@ -15,28 +23,90 @@ const projects: Project[] = [
       "An active cross-platform programming language built in Rust, focused on performance and low-level system integration. Includes complex environment setup, full project compilation, and an in-progress Language Server Protocol (LSP) implementation for IDE support.",
     tags: ["Rust", "LSP", "Compiler", "Systems Programming"],
     github: "https://github.com/SudoChips-exe",
+    caseStudy: {
+      problem: "Existing scripting languages often lack sufficient control over low-level system integrations, while systems languages can be too slow to prototype with. There was a need for a language that compiles natively but feels light to write.",
+      architecture: "The compiler is built entirely in Rust, leveraging zero-cost abstractions to parse the AST. The Language Server Protocol (LSP) operates as a separate binary, communicating over stdin/stdout to provide real-time IDE diagnostics.",
+      snippetTitle: "src/parser/ast.rs",
+      codeSnippet: `pub enum Expr {
+    Binary(Box<Expr>, Token, Box<Expr>),
+    Grouping(Box<Expr>),
+    Literal(LiteralValue),
+    Unary(Token, Box<Expr>),
+    Variable(Token),
+}
+
+impl Expr {
+    pub fn accept<R>(&self, visitor: &mut dyn Visitor<R>) -> R {
+        match self {
+            Expr::Binary(left, op, right) => visitor.visit_binary(left, op, right),
+            Expr::Grouping(expr) => visitor.visit_grouping(expr),
+            Expr::Literal(val) => visitor.visit_literal(val),
+            Expr::Unary(op, right) => visitor.visit_unary(op, right),
+            Expr::Variable(name) => visitor.visit_variable(name),
+        }
+    }
+}`
+    }
   },
   {
     title: "Data Analysis & ML Modeling",
     description:
       "Statistical modeling and data processing using Python and R. Built multiple linear regression models relevant to Industrial Mathematics coursework and leveraged BI tools for visualization and insight delivery.",
     tags: ["Python", "R", "SQL", "Pandas", "NumPy", "Scikit-learn", "Power BI"],
+    caseStudy: {
+      problem: "Raw industrial and mathematical datasets are difficult to interpret without rigorous statistical modeling. The goal was to build robust models to extract actionable insights and visualize them for non-technical stakeholders.",
+      architecture: "Data pipelines were constructed using Pandas and NumPy to clean and normalize raw data. Statistical modeling (like multiple linear regression) was performed using Scikit-learn and R, and the final analytical models were connected to Power BI dashboards for real-time visualization."
+    }
   },
   {
     title: "SafeWomb AI",
     description:
       "Real-time pregnancy health monitoring system that analyzes maternal voice patterns using AI to detect risks and deliver instant SMS alerts. Combines speech processing, LLM risk analysis, and voice synthesis in a single pipeline.",
     tags: ["Node.js", "Express", "MongoDB", "OpenAI", "ElevenLabs", "Twilio", "Google Cloud STT"],
+    caseStudy: {
+      problem: "Maternal health complications often go undetected due to a lack of continuous monitoring, especially in under-resourced areas. A non-invasive, accessible screening method was needed to detect early warning signs.",
+      architecture: "The system ingests voice data via Twilio, processes it through Google Cloud Speech-to-Text, and analyzes it using an OpenAI-powered risk detection pipeline. If a risk is identified, the backend (Node.js/Express) triggers an alert protocol, synthesizing a response via ElevenLabs and sending SMS notifications."
+    }
   },
   {
     title: "NeuroSync Mesh",
     description:
       "Offline brainwave mesh network for crisis responders during floods. Anonymously shares focus and stress signals from EEG headbands across a P2P mesh, enabling faster decision-making with no internet dependency.",
     tags: ["Python", "PyTorch", "Scapy", "SciPy", "Flask", "Plotly", "Raspberry Pi"],
+    caseStudy: {
+      problem: "During severe floods and natural disasters, standard communication infrastructure often collapses. Crisis responders need a way to monitor team cognitive load and stress levels without relying on cellular networks or the internet.",
+      architecture: "EEG headbands capture brainwave data, which is processed locally on Raspberry Pi nodes using SciPy and PyTorch for stress classification. The nodes communicate over a custom ad-hoc peer-to-peer Wi-Fi mesh network built with Scapy, aggregating the data into a local Flask-served Plotly dashboard for the team lead.",
+      snippetTitle: "mesh_broadcast.py",
+      codeSnippet: `def broadcast_stress_level(stress_score):
+    # Construct a custom beacon frame for the P2P mesh
+    dot11 = Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff",
+                  addr2=mac_address, addr3=mac_address)
+    beacon = Dot11Beacon(cap="ESS+privacy")
+    
+    # Embed stress score in custom Information Element
+    essid = Dot11Elt(ID="SSID", info=f"NSync_{stress_score}")
+    frame = RadioTap()/dot11/beacon/essid
+    
+    # Broadcast on interface
+    sendp(frame, iface="wlan1", count=1, verbose=False)`
+    }
   },
 ];
 
 export default function Projects() {
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    if (activeProject) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [activeProject]);
+
   return (
     <section id="projects" className="py-28 px-6 bg-[#080d18]">
       <div className="max-w-5xl mx-auto">
@@ -82,11 +152,68 @@ export default function Projects() {
                     <span key={tag} className="text-xs text-sky-400/80 font-mono">{tag}</span>
                   ))}
                 </div>
+                {project.caseStudy && (
+                  <div className="mt-4 pt-4 border-t border-slate-800">
+                    <button 
+                      onClick={() => setActiveProject(project)}
+                      className="text-sm text-sky-400 font-medium flex items-center gap-1.5 hover:gap-2 transition-all"
+                    >
+                      View Case Study &rarr;
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Case Study Modal */}
+      {activeProject && activeProject.caseStudy && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080d18]/80 backdrop-blur-sm">
+          <div className="bg-[#0e1628] border border-slate-800 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fade-in-up">
+            <button 
+              onClick={() => setActiveProject(null)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition-colors"
+              aria-label="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="p-6 sm:p-10">
+              <h3 className="text-2xl font-bold text-white mb-3">{activeProject.title}</h3>
+              <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-6">
+                {activeProject.tags.map((tag) => (
+                  <span key={tag} className="text-xs text-sky-400/80 font-mono bg-sky-400/10 px-2.5 py-1 rounded">{tag}</span>
+                ))}
+              </div>
+              
+              <div className="space-y-8 text-slate-300 leading-relaxed text-[15px]">
+                <div>
+                  <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">The Problem</h4>
+                  <p>{activeProject.caseStudy.problem}</p>
+                </div>
+                <div>
+                  <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">Architecture</h4>
+                  <p>{activeProject.caseStudy.architecture}</p>
+                </div>
+                
+                {activeProject.caseStudy.codeSnippet && (
+                  <div>
+                    <h4 className="text-sky-400 font-medium mb-3 uppercase tracking-wider text-[13px]">
+                      Proof of Work {activeProject.caseStudy.snippetTitle && <span className="text-slate-500">— {activeProject.caseStudy.snippetTitle}</span>}
+                    </h4>
+                    <pre className="bg-[#080d18] border border-slate-800 p-5 rounded-lg overflow-x-auto text-sm font-mono text-sky-200">
+                      <code>{activeProject.caseStudy.codeSnippet}</code>
+                    </pre>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
