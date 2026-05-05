@@ -99,6 +99,16 @@ export default function Projects() {
   useEffect(() => {
     if (activeProject) {
       document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setActiveProject(null);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "unset";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
     } else {
       document.body.style.overflow = "unset";
     }
@@ -170,19 +180,33 @@ export default function Projects() {
 
       {/* Case Study Modal */}
       {activeProject && activeProject.caseStudy && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080d18]/80 backdrop-blur-sm">
-          <div className="bg-[#0e1628] border border-slate-800 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fade-in-up">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080d18]/80 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveProject(null);
+          }}
+        >
+          <div 
+            className="bg-[#0e1628] border border-slate-800 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fade-in-up"
+            tabIndex={-1}
+            ref={(el) => {
+              if (el) el.focus();
+            }}
+          >
             <button 
               onClick={() => setActiveProject(null)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition-colors"
-              aria-label="Close"
+              aria-label="Close Case Study"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             <div className="p-6 sm:p-10">
-              <h3 className="text-2xl font-bold text-white mb-3">{activeProject.title}</h3>
+              <h3 id="modal-title" className="text-2xl font-bold text-white mb-3">{activeProject.title}</h3>
               <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-6">
                 {activeProject.tags.map((tag) => (
                   <span key={tag} className="text-xs text-sky-400/80 font-mono bg-sky-400/10 px-2.5 py-1 rounded">{tag}</span>
