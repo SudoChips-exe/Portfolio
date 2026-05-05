@@ -47,9 +47,9 @@ export default function Projects() {
             <p className="text-slate-500 font-mono text-sm">// projects coming soon</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <div key={project.title} className="surface-card card-hover p-6 flex flex-col">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((project, index) => (
+              <div key={project.title} className={`surface-card card-hover p-6 flex flex-col ${index === 0 ? 'sm:col-span-2' : ''}`}>
                 <div className="flex items-start justify-between mb-4">
                   <svg className="w-7 h-7 text-sky-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}

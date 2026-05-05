@@ -1,35 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-
-const roles = [
-  "Software & systems Engineer" , 
-];
 
 export default function Hero() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed] = useState("");
-  const [typing, setTyping] = useState(true);
-
-  useEffect(() => {
-    const current = roles[roleIndex];
-    let timeout: ReturnType<typeof setTimeout>;
-    if (typing) {
-      if (displayed.length < current.length) {
-        timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 75);
-      } else {
-        timeout = setTimeout(() => setTyping(false), 2000);
-      }
-    } else {
-      if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 35);
-      } else {
-        setRoleIndex((i) => (i + 1) % roles.length);
-        setTyping(true);
-      }
-    }
-    return () => clearTimeout(timeout);
-  }, [displayed, typing, roleIndex]);
-
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#080d18]">
 
@@ -40,12 +11,18 @@ export default function Hero() {
           <span className="text-sky-400">Amechi</span>
         </h1>
 
-        <div className="flex items-center gap-3 mb-6 h-8">
-          <span className="text-slate-500 font-mono text-sm">~/</span>
-          <span className="text-slate-300 font-mono text-base">
-            {displayed}
-            <span className="text-sky-400 animate-pulse">▋</span>
-          </span>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-6">
+          <h2 className="text-xl font-medium text-slate-300 tracking-wide">
+            Software & Systems Engineer
+          </h2>
+          <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-slate-700"></div>
+          <div className="flex items-center gap-2 text-slate-400 text-sm font-medium">
+            <svg className="w-4 h-4 text-sky-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Lagos, Nigeria
+          </div>
         </div>
 
         <p className="text-slate-400 text-lg leading-relaxed max-w-2xl mb-10">
