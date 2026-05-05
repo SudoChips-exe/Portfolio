@@ -12,6 +12,15 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      window.history.pushState(null, "", `/${id}`);
+    }
+  };
+
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#080d18]">
       {/* Professional Interactive Spotlight */}
@@ -51,11 +60,11 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-wrap gap-4">
-          <a href="#projects"
+          <a href="#projects" onClick={(e) => handleNavClick(e, "projects")}
             className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-[#080d18] font-semibold text-sm rounded-lg transition-colors duration-200">
             View Projects
           </a>
-          <a href="#contact"
+          <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}
             className="px-6 py-2.5 border border-slate-700 hover:border-sky-500/50 text-slate-300 hover:text-sky-400 text-sm rounded-lg transition-colors duration-200">
             Contact Me
           </a>

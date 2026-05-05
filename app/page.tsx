@@ -10,12 +10,14 @@ export default function Home() {
   return (
     <main className="bg-[#0a0f1e] text-slate-200">
       <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Contact />
-      <Footer />
+      <div id="main-content" tabIndex={-1} className="outline-none">
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Footer />
+      </div>
     </main>
   );
 }

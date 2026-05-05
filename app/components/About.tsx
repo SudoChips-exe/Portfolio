@@ -1,3 +1,5 @@
+"use client";
+
 const stats = [
   { label: "University", value: "UNILAG" },
   { label: "Degree", value: "Ind. Math" },
@@ -6,6 +8,15 @@ const stats = [
 ];
 
 export default function About() {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      window.history.pushState(null, "", `/${id}`);
+    }
+  };
+
   return (
     <section id="about" className="py-28 px-6 bg-[#080d18]">
       <div className="max-w-5xl mx-auto">
@@ -57,7 +68,7 @@ export default function About() {
             </div>
 
             <div className="pt-4">
-              <a href="#contact"
+              <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}
                 className="inline-flex items-center gap-2 text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors group">
                 Get in touch
                 <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
