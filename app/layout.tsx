@@ -26,6 +26,9 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+  alternates: {
+    canonical: "https://sudochips.dev",
+  },
   twitter: {
     card: "summary_large_image",
     title: "Chibueze Emmanuel Amechi | Software & Systems Engineer",
