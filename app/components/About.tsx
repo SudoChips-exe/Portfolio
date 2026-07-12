@@ -30,7 +30,7 @@ export default function About() {
                 <span className="text-slate-200 font-medium">
                   Industrial Mathematics (Mathematics &amp; Computer Science)
                 </span>{" "}
-                undergraduate at the University of Lagos. I learn best by building — whether
+                undergraduate at the University of Lagos. I learn best by building  whether
                 that&apos;s a full-stack web app, a data pipeline, or a compiler from scratch.
               </p>
               <p>
