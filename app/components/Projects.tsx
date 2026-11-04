@@ -268,16 +268,20 @@ export default function Projects() {
   }, [activeProject]);
 
   return (
-    <section id="projects" className="bg-white py-20 px-6 border-b border-zinc-100">
-      <div className="max-w-4xl mx-auto">
+    <section id="projects" className="bg-white py-24 sm:py-32 px-6 sm:px-8 lg:px-12 border-b border-zinc-100">
+      <div className="max-w-6xl mx-auto">
         <SectionTitle title="Projects" />
 
-        <div className="divide-y divide-zinc-100">
+        {/* Desktop 2-Column Responsive Grid */}
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
           {projects.map((project) => (
-            <div key={project.title} className="py-8 first:pt-0 last:pb-0">
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-base font-semibold text-zinc-900">
+            <div
+              key={project.title}
+              className="border-t border-zinc-200/90 pt-6 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-baseline justify-between gap-3 mb-1">
+                  <h3 className="text-lg font-semibold text-zinc-950">
                     {project.title}
                   </h3>
                   {project.github && (
@@ -285,50 +289,55 @@ export default function Projects() {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-mono text-zinc-400 hover:text-zinc-900 underline underline-offset-2"
+                      className="text-xs font-mono text-zinc-400 hover:text-zinc-950 underline underline-offset-2"
                       aria-label={`${project.title} on GitHub`}
                     >
                       source
                     </a>
                   )}
                 </div>
-                <span className="text-xs font-mono text-zinc-400">
+
+                <p className="text-xs font-mono text-zinc-500 mb-3">
                   {project.subtitle}
-                </span>
+                </p>
+
+                <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed mb-6">
+                  {project.description}
+                </p>
               </div>
 
-              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-3xl my-3">
-                {project.description}
-              </p>
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-zinc-100">
+                  <div className="flex flex-wrap items-center gap-x-2 text-[11px] font-mono text-zinc-400">
+                    {project.tags.map((tag, i) => (
+                      <span key={tag} className="inline-flex items-center">
+                        <span>{tag}</span>
+                        {i < project.tags.length - 1 && (
+                          <span className="ml-2 select-none">&bull;</span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-                <div className="flex flex-wrap items-center gap-x-2 text-[11px] font-mono text-zinc-400">
-                  {project.tags.map((tag, i) => (
-                    <span key={tag} className="inline-flex items-center">
-                      <span>{tag}</span>
-                      {i < project.tags.length - 1 && <span className="ml-2 select-none">&bull;</span>}
-                    </span>
-                  ))}
+                  {project.caseStudy && (
+                    <button
+                      onClick={() => setActiveProject(project)}
+                      className="text-xs text-zinc-950 hover:text-zinc-600 font-medium underline underline-offset-4"
+                    >
+                      Read case study
+                    </button>
+                  )}
                 </div>
-
-                {project.caseStudy && (
-                  <button
-                    onClick={() => setActiveProject(project)}
-                    className="text-xs text-zinc-900 hover:text-zinc-500 font-medium underline underline-offset-4"
-                  >
-                    Read case study
-                  </button>
-                )}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Case Study Modal - Plain, Clean White Dialogue */}
+      {/* Case Study Modal */}
       {activeProject && activeProject.caseStudy && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-900/30 backdrop-blur-xs animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-950/40 backdrop-blur-xs animate-fade-in"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
@@ -337,12 +346,12 @@ export default function Projects() {
           }}
         >
           <div
-            className="bg-white border border-zinc-200 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 sm:p-8 relative shadow-lg"
+            className="bg-white border border-zinc-200 rounded-lg w-full max-w-3xl max-h-[85vh] overflow-y-auto p-6 sm:p-8 relative shadow-xl"
             tabIndex={-1}
           >
             <button
               onClick={() => setActiveProject(null)}
-              className="absolute top-5 right-5 text-zinc-400 hover:text-zinc-900 p-1 text-sm font-mono"
+              className="absolute top-5 right-5 text-zinc-400 hover:text-zinc-950 p-1 text-sm font-mono"
               aria-label="Close Case Study"
             >
               [close]
@@ -352,7 +361,7 @@ export default function Projects() {
               <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
                 Technical Case Study
               </span>
-              <h3 id="modal-title" className="text-xl sm:text-2xl font-bold text-zinc-950">
+              <h3 id="modal-title" className="text-2xl sm:text-3xl font-bold text-zinc-950">
                 {activeProject.title}
               </h3>
               <p className="text-xs font-mono text-zinc-500 mt-1">

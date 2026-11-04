@@ -40,7 +40,7 @@ export default function Navbar() {
           }
         });
       },
-      { threshold: 0.4 }
+      { threshold: 0.3 }
     );
 
     sections.forEach((section) => observer.observe(section));
@@ -70,28 +70,28 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-200 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-sm border-b border-zinc-200/80"
+          ? "bg-white/95 backdrop-blur-sm border-b border-zinc-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between">
         <Link
           href="/"
           onClick={(e) => handleNavClick(e, "top")}
-          className="text-sm font-semibold tracking-tight text-zinc-900 hover:text-zinc-600"
+          className="text-sm sm:text-base font-semibold tracking-tight text-zinc-950 hover:text-zinc-600 transition-colors"
         >
           Chibueze Emmanuel Amechi
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-7">
-          <ul className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
+          <ul className="flex items-center gap-7 lg:gap-8">
             {links.map((link) => (
               <li key={link.id}>
                 <a
                   href={`#${link.id}`}
                   onClick={(e) => handleNavClick(e, link.id)}
-                  className="text-xs font-medium text-zinc-500 hover:text-zinc-900"
+                  className="text-xs sm:text-sm font-medium text-zinc-500 hover:text-zinc-950 transition-colors"
                 >
                   {link.name}
                 </a>
@@ -99,12 +99,12 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="h-3.5 w-px bg-zinc-200" aria-hidden="true" />
+          <div className="h-4 w-px bg-zinc-200" aria-hidden="true" />
 
           <a
             href="/resume.pdf"
             download
-            className="text-xs font-medium text-zinc-900 hover:text-zinc-500 underline underline-offset-4"
+            className="text-xs sm:text-sm font-medium text-zinc-950 hover:text-zinc-600 underline underline-offset-4"
           >
             Resume
           </a>
@@ -113,7 +113,7 @@ export default function Navbar() {
         {/* Mobile Hamburger */}
         <div className="md:hidden flex items-center">
           <button
-            className="p-2 text-zinc-600 hover:text-zinc-900"
+            className="p-2 text-zinc-600 hover:text-zinc-950"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation menu"
             aria-expanded={menuOpen}
@@ -137,7 +137,7 @@ export default function Navbar() {
               key={link.id}
               href={`#${link.id}`}
               onClick={(e) => handleNavClick(e, link.id)}
-              className="block text-sm font-medium text-zinc-600 hover:text-zinc-900 py-1"
+              className="block text-sm font-medium text-zinc-600 hover:text-zinc-950 py-1"
             >
               {link.name}
             </a>
@@ -146,7 +146,7 @@ export default function Navbar() {
             <a
               href="/resume.pdf"
               download
-              className="block text-xs font-medium text-zinc-900 underline underline-offset-4 py-1"
+              className="block text-xs font-medium text-zinc-950 underline underline-offset-4 py-1"
             >
               Download Resume
             </a>

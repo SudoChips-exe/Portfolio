@@ -71,24 +71,27 @@ const skillCategories: SkillCategory[] = [
 
 export default function Skills() {
   return (
-    <section id="skills" className="bg-white py-20 px-6 border-b border-zinc-100">
-      <div className="max-w-4xl mx-auto">
+    <section id="skills" className="bg-white py-24 sm:py-32 px-6 sm:px-8 lg:px-12 border-b border-zinc-100">
+      <div className="max-w-6xl mx-auto">
         <SectionTitle title="Technical Skills" />
 
-        <div className="space-y-8">
+        <div className="space-y-10">
           {skillCategories.map((group) => (
-            <div key={group.category} className="border-t border-zinc-100 pt-4 grid sm:grid-cols-12 gap-3 sm:gap-6 items-baseline">
+            <div
+              key={group.category}
+              className="border-t border-zinc-200/90 pt-6 grid sm:grid-cols-12 gap-3 sm:gap-8 items-baseline"
+            >
               <div className="sm:col-span-4">
-                <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-medium">
+                <h3 className="text-xs sm:text-sm font-mono uppercase tracking-wider text-zinc-950 font-semibold">
                   {group.category}
                 </h3>
               </div>
-              <div className="sm:col-span-8 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs font-mono text-zinc-700">
+              <div className="sm:col-span-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm font-mono text-zinc-700">
                 {group.items.map((skill, i) => (
                   <span key={skill} className="inline-flex items-center">
                     <span className="hover:text-zinc-950 transition-colors">{skill}</span>
                     {i < group.items.length - 1 && (
-                      <span className="text-zinc-300 ml-2.5 select-none">&bull;</span>
+                      <span className="text-zinc-300 ml-3 select-none">&bull;</span>
                     )}
                   </span>
                 ))}

@@ -39,24 +39,24 @@ export default function Contact() {
   };
 
   const inputClass =
-    "w-full px-3 py-2 bg-white border border-zinc-200 focus:border-zinc-900 text-zinc-900 placeholder-zinc-400 rounded outline-none text-xs sm:text-sm font-sans transition-colors";
+    "w-full px-3.5 py-2.5 bg-white border border-zinc-200 focus:border-zinc-950 text-zinc-900 placeholder-zinc-400 rounded outline-none text-xs sm:text-sm font-sans transition-colors";
 
   return (
-    <section id="contact" className="bg-white py-20 px-6">
-      <div className="max-w-4xl mx-auto">
+    <section id="contact" className="bg-white py-24 sm:py-32 px-6 sm:px-8 lg:px-12">
+      <div className="max-w-6xl mx-auto">
         <SectionTitle title="Contact" />
 
-        <div className="grid md:grid-cols-12 gap-12 items-start">
-          {/* Coordinates */}
-          <div className="md:col-span-5 space-y-4">
-            <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Coordinates Column */}
+          <div className="lg:col-span-5 space-y-6">
+            <p className="text-zinc-600 text-sm sm:text-base leading-relaxed">
               Open to technical conversations, systems programming research, and production AI engineering opportunities.
             </p>
 
-            <div className="space-y-2 pt-2 text-xs font-mono">
+            <div className="space-y-3 pt-2 text-xs sm:text-sm font-mono">
               {links.map((link) => (
-                <div key={link.label} className="flex items-baseline gap-3">
-                  <span className="text-zinc-400 w-16">{link.label}</span>
+                <div key={link.label} className="flex items-baseline gap-4">
+                  <span className="text-zinc-400 w-20">{link.label}</span>
                   <a
                     href={link.href}
                     target="_blank"
@@ -70,11 +70,11 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Simple Clean Form */}
-          <div className="md:col-span-7">
-            <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Form Column */}
+          <div className="lg:col-span-7">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="contact-name" className="block text-xs font-mono text-zinc-500 mb-1">
+                <label htmlFor="contact-name" className="block text-xs font-mono text-zinc-500 mb-1.5">
                   Name
                 </label>
                 <input
@@ -89,7 +89,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="block text-xs font-mono text-zinc-500 mb-1">
+                <label htmlFor="contact-email" className="block text-xs font-mono text-zinc-500 mb-1.5">
                   Email
                 </label>
                 <input
@@ -104,13 +104,13 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="block text-xs font-mono text-zinc-500 mb-1">
+                <label htmlFor="contact-message" className="block text-xs font-mono text-zinc-500 mb-1.5">
                   Message
                 </label>
                 <textarea
                   id="contact-message"
                   placeholder="Your message..."
-                  rows={4}
+                  rows={5}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   required
@@ -119,13 +119,13 @@ export default function Contact() {
               </div>
 
               {status === "error" && (
-                <div className="p-2.5 bg-red-50 text-red-700 text-xs font-mono rounded">
+                <div className="p-3 bg-red-50 text-red-700 text-xs font-mono rounded">
                   {errorMessage}
                 </div>
               )}
 
               {status === "sent" && (
-                <div className="p-2.5 bg-emerald-50 text-emerald-800 text-xs font-mono rounded">
+                <div className="p-3 bg-emerald-50 text-emerald-800 text-xs font-mono rounded">
                   Message sent successfully.
                 </div>
               )}
@@ -133,7 +133,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending" || status === "sent"}
-                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white text-xs font-medium rounded transition-colors"
+                className="px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white text-xs sm:text-sm font-medium rounded transition-colors"
               >
                 {status === "sending" ? "Sending..." : "Send Message"}
               </button>
