@@ -1,88 +1,91 @@
 "use client";
 
+import React from "react";
+
+const focusItems = [
+  {
+    category: "Education & Core Focus",
+    title: "B.Sc. Industrial Mathematics (Math & CS)",
+    institution: "University of Lagos (UNILAG) • 2024 - 2028",
+    description: "Core focus on algorithms, data structures, systems programming, statistical modeling, and numerical computation.",
+  },
+  {
+    category: "Systems & Compiler Engineering",
+    title: "Low-Level Systems & Tooling",
+    institution: "Independent R&D",
+    description: "Designing cross-platform compiled languages, custom Language Server Protocols (LSP), and packet-level networking tools in Rust, C++, and Python.",
+  },
+  {
+    category: "Leadership & Product Engineering",
+    title: "Co-Founder & Lead Engineer",
+    institution: "Lunix-dv • Full-Stack & AI Infrastructure",
+    description: "Leading end-to-end product engineering, cloud API integrations, and hardware-software co-design across web and embedded architectures.",
+  },
+];
+
 const stats = [
-  { label: "University", value: "UNILAG" },
-  { label: "Degree", value: "Ind. Math" },
-  { label: "Tech Stack", value: "20+" },
-  { label: "Long-term Goal", value: "PhD" },
+  { value: "UNILAG", label: "University" },
+  { value: "Math & CS", label: "Specialization" },
+  { value: "20+", label: "Tech Stack" },
+  { value: "Full-Spectrum", label: "Systems to AI" },
 ];
 
 export default function About() {
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      window.history.pushState(null, "", `/${id}`);
-    }
-  };
-
   return (
-    <section id="about" className="py-28 px-6 bg-[#080d18]">
-      <div className="max-w-5xl mx-auto">
-        <SectionHeader index="01" title="About Me" />
+    <section id="about" className="bg-white py-20 px-6 border-b border-zinc-100">
+      <div className="max-w-4xl mx-auto">
+        <SectionTitle title="About" />
 
-        <div className="grid md:grid-cols-5 gap-12 items-start">
-          <div className="md:col-span-3 space-y-8">
-            <div className="space-y-4 text-slate-400 leading-relaxed text-[15px]">
-              <p>
-                I&apos;m an{" "}
-                <span className="text-slate-200 font-medium">
-                  Industrial Mathematics (Mathematics &amp; Computer Science)
-                </span>{" "}
-                undergraduate at the University of Lagos. I learn best by building  whether
-                that&apos;s a full-stack web app, a data pipeline, or a compiler from scratch.
-              </p>
-              <p>
-                My work spans the full spectrum: from polished user interfaces to low-level
-                systems code in Rust and C++. I&apos;m drawn to problems that sit at the edge
-                of what&apos;s been done before, especially where software meets hardware.
-              </p>
-            </div>
+        {/* Narrative Paragraphs - Zero Em Dashes */}
+        <div className="space-y-4 text-zinc-600 text-sm sm:text-base leading-relaxed max-w-3xl mb-16">
+          <p>
+            I&apos;m an{" "}
+            <span className="text-zinc-900 font-medium">
+              Industrial Mathematics (Mathematics &amp; Computer Science)
+            </span>{" "}
+            undergraduate at the University of Lagos. I learn best by building from first principles, whether that means shipping a full-stack web platform, orchestrating an agentic AI pipeline, or writing a compiler and Language Server from scratch.
+          </p>
+          <p>
+            My work spans the full engineering spectrum: from responsive TypeScript/React interfaces and distributed backend APIs to low-level systems code in Rust and C++ and offline hardware mesh networks. Alongside my independent systems research, I co-founded Lunix-dv, where I lead full-stack architecture and developer workflows.
+          </p>
+        </div>
 
-            <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-slate-200">Education & Core Focus</h3>
-              
-              <div className="relative border-l border-slate-800 ml-3 pl-6 space-y-8">
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 bg-sky-500 rounded-full ring-4 ring-[#080d18]"></div>
-                  <h4 className="text-slate-200 font-medium text-base">BSc. Industrial Mathematics</h4>
-                  <p className="text-sm text-sky-400 mb-2">University of Lagos (UNILAG) • Lagos, Nigeria</p>
-                  <p className="text-sm text-slate-400 leading-relaxed">Core coursework bridging theoretical mathematics, statistics, and computer science. Building a strong foundation for advanced computational research.</p>
-                </div>
-                
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 bg-slate-700 rounded-full ring-4 ring-[#080d18]"></div>
-                  <h4 className="text-slate-200 font-medium text-base">Systems Programming & R&D</h4>
-                  <p className="text-sm text-sky-400 mb-2">Independent Focus</p>
-                  <p className="text-sm text-slate-400 leading-relaxed">Developing cross-platform compiled languages, custom Language Server Protocols (LSP), and low-level tools in Rust and C++.</p>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute -left-[31px] top-1.5 w-3 h-3 bg-slate-700 rounded-full ring-4 ring-[#080d18]"></div>
-                  <h4 className="text-slate-200 font-medium text-base">Future Direction</h4>
-                  <p className="text-sm text-sky-400 mb-2">PhD in Computer Engineering</p>
-                  <p className="text-sm text-slate-400 leading-relaxed">Actively working towards graduate research focused on hardware-software integration, robotics, and embedded systems architecture.</p>
-                </div>
+        {/* 3 Focus Areas - Plain, Seamless Minimalist Layout */}
+        <div className="mb-16">
+          <h3 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-6">
+            Core Tracks &amp; Focus
+          </h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            {focusItems.map((item) => (
+              <div key={item.title} className="space-y-2 border-t border-zinc-200 pt-4">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 block">
+                  {item.category}
+                </span>
+                <h4 className="text-sm font-semibold text-zinc-900 leading-snug">
+                  {item.title}
+                </h4>
+                <p className="text-xs font-mono text-zinc-500">
+                  {item.institution}
+                </p>
+                <p className="text-xs text-zinc-600 leading-relaxed pt-1">
+                  {item.description}
+                </p>
               </div>
-            </div>
-
-            <div className="pt-4">
-              <a href="#contact" onClick={(e) => handleNavClick(e, "contact")}
-                className="inline-flex items-center gap-2 text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors group">
-                Get in touch
-                <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
+            ))}
           </div>
+        </div>
 
-          <div className="md:col-span-2 grid grid-cols-2 gap-3">
+        {/* 4 Stats - Subtle, Plain Minimalist Row */}
+        <div className="border-t border-zinc-100 pt-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {stats.map((s) => (
-              <div key={s.label} className="surface-card card-hover p-5 text-center">
-                <div className="text-xl font-bold text-sky-400 mb-1 font-mono">{s.value}</div>
-                <div className="text-slate-500 text-xs">{s.label}</div>
+              <div key={s.label}>
+                <div className="text-lg sm:text-xl font-bold font-mono text-zinc-900 tracking-tight">
+                  {s.value}
+                </div>
+                <div className="text-xs text-zinc-500 mt-0.5">
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
@@ -92,14 +95,12 @@ export default function About() {
   );
 }
 
-function SectionHeader({ index, title }: { index: string; title: string }) {
+function SectionTitle({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-3 mb-14">
-      <span className="text-sky-400 font-mono text-xs">{index}.</span>
-      <h2 className="text-2xl font-bold text-white tracking-tight">{title}</h2>
-      <div className="flex-1 h-px bg-slate-800" />
-    </div>
+    <h2 className="font-display text-2xl sm:text-3xl text-zinc-950 font-normal tracking-tight mb-8">
+      {title}
+    </h2>
   );
 }
 
-export { SectionHeader };
+export { SectionTitle };

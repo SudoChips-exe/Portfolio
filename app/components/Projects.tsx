@@ -1,10 +1,12 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import CopyablePre from "./CopyablePre";
-import { SectionHeader } from "./About";
+import { SectionTitle } from "./About";
 
 export interface Project {
   title: string;
+  subtitle: string;
   description: string;
   tags: string[];
   github?: string;
@@ -22,18 +24,27 @@ export interface Project {
 const projects: Project[] = [
   {
     title: "Goonsharp",
+    subtitle: "Compiler & Language Server (LSP)",
     description:
-      "An active cross-platform programming language built in Rust, focused on performance and low-level system integration. Includes complex environment setup, full project compilation, and an in-progress Language Server Protocol (LSP) implementation for IDE support.",
-    tags: ["Rust", "LSP", "Compiler", "Systems Programming"],
+      "An open-source, cross-platform compiled programming language built from scratch in Rust. Features lexical analysis, AST parsing, full project compilation, and a custom Language Server Protocol (LSP) delivering real-time IDE diagnostics and autocompletion.",
+    tags: ["Rust", "Compiler Design", "LSP", "Systems Programming"],
     github: "https://github.com/SudoChips-exe",
     caseStudy: {
-      problem: "Existing scripting languages often lack sufficient control over low-level system integrations, while systems languages can be too slow to prototype with. There was a need for a language that compiles natively but feels light to write.",
-      architecture: "The compiler is built entirely in Rust, leveraging zero-cost abstractions to parse the AST. The Language Server Protocol (LSP) operates as a separate binary, communicating over stdin/stdout to provide real-time IDE diagnostics.",
-      architectureDiagram: `[Source .gs] -> (Lexer) -> [Tokens] -> (Parser) -> [AST]
-   |                                     |
-   v                                     v
-[LSP Server] <==== stdin/stdout ===> [VS Code]`,
-      impact: "Achieved sub-2ms lexing/parsing for 10k lines of code. The Language Server Protocol provides real-time diagnostics with <10ms latency, matching industry-standard tooling performance.",
+      problem:
+        "Existing interpreted scripting languages frequently lack low-level memory control and type guarantees, while established systems languages present steep boilerplate and lack lightweight, integrated Language Server protocol ergonomics for modern code editors.",
+      architecture:
+        "Engineered purely in Rust leveraging zero-cost abstractions and strict memory safety. The pipeline comprises a high-throughput lexical analyzer, recursive-descent AST parser with error synchronization, semantic type-checking passes, and an independent LSP binary communicating over JSON-RPC 2.0 (stdin/stdout) to power live IDE diagnostics and hover completions.",
+      architectureDiagram: `[Source Code .gs] -> (Lexer / Tokenizer) -> [Token Stream]
+                                              |
+                                              v
+[AST Representation] <-------------- (Recursive Parser)
+        |
+        +--> (Semantic Analysis & Type Checking) -> [Compiled Artifact]
+        |
+        v
+[LSP Daemon (JSON-RPC 2.0)] <==== stdin / stdout ====> [VS Code / Editor]`,
+      impact:
+        "Sub-2ms lexing and parsing throughput across 10,000 lines of code. The Language Server delivers live diagnostic updates and completions with sub-10ms response latency matching production tooling standards.",
       snippetTitle: "src/parser/ast.rs",
       codeSnippet: `pub enum Expr {
     Binary(Box<Expr>, Token, Box<Expr>),
@@ -41,6 +52,7 @@ const projects: Project[] = [
     Literal(LiteralValue),
     Unary(Token, Box<Expr>),
     Variable(Token),
+    Call(Box<Expr>, Token, Vec<Expr>),
 }
 
 impl Expr {
@@ -51,68 +63,183 @@ impl Expr {
             Expr::Literal(val) => visitor.visit_literal(val),
             Expr::Unary(op, right) => visitor.visit_unary(op, right),
             Expr::Variable(name) => visitor.visit_variable(name),
+            Expr::Call(callee, paren, args) => visitor.visit_call(callee, paren, args),
         }
     }
-}`
-    }
-  },
-  {
-    title: "Data Analysis & ML Modeling",
-    description:
-      "Statistical modeling and data processing using Python and R. Built multiple linear regression models relevant to Industrial Mathematics coursework and leveraged BI tools for visualization and insight delivery.",
-    tags: ["Python", "R", "SQL", "Pandas", "NumPy", "Scikit-learn", "Power BI"],
-    caseStudy: {
-      problem: "Raw industrial and mathematical datasets are difficult to interpret without rigorous statistical modeling. The goal was to build robust models to extract actionable insights and visualize them for non-technical stakeholders.",
-      architecture: "Data pipelines were constructed using Pandas and NumPy to clean and normalize raw data. Statistical modeling (like multiple linear regression) was performed using Scikit-learn and R, and the final analytical models were connected to Power BI dashboards for real-time visualization.",
-      impact: "Processed and cleaned over 500,000 rows of industrial data. The final linear regression models achieved an R-squared value of 0.89, providing actionable insights that significantly improved predictive accuracy for non-technical stakeholders."
-    }
+}`,
+    },
   },
   {
     title: "SafeWomb AI",
+    subtitle: "Real-Time Voice & Agentic Alert Pipeline",
     description:
-      "Real-time pregnancy health monitoring system that analyzes maternal voice patterns using AI to detect risks and deliver instant SMS alerts. Combines speech processing, LLM risk analysis, and voice synthesis in a single pipeline.",
-    tags: ["Node.js", "Express", "MongoDB", "OpenAI", "ElevenLabs", "Twilio", "Google Cloud STT"],
+      "Distributed maternal health monitoring service that analyzes real-time patient voice streams to detect clinical risk indicators and dispatch automated SMS alerts. Orchestrates speech-to-text, LLM tool-calling evaluation, voice synthesis, and NoSQL state persistence in a low-latency pipeline.",
+    tags: [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "OpenAI API",
+      "Google Cloud STT",
+      "ElevenLabs",
+      "Twilio",
+    ],
+    github: "https://github.com/SudoChips-exe",
     caseStudy: {
-      problem: "Maternal health complications often go undetected due to a lack of continuous monitoring, especially in under-resourced areas. A non-invasive, accessible screening method was needed to detect early warning signs.",
-      architecture: "The system ingests voice data via Twilio, processes it through Google Cloud Speech-to-Text, and analyzes it using an OpenAI-powered risk detection pipeline. If a risk is identified, the backend (Node.js/Express) triggers an alert protocol, synthesizing a response via ElevenLabs and sending SMS notifications.",
-      architectureDiagram: `[Voice Call] -> (Twilio) -> [Audio Stream]
-   |
-   v
-(Google STT) -> [Text] -> (OpenAI LLM Risk Analysis)
-   |
-   +--> [Risk Detected] -> (Node.js Backend)
-                               |
-                   +-----------+-----------+
-                   |                       |
-            (ElevenLabs TTS)        (Twilio SMS)
-                   |                       |
-             [Audio Alert]           [SMS Alert]`,
-      impact: "Built a fully autonomous, low-latency pipeline capable of analyzing maternal voice streams and triggering emergency alerts in under 3.5 seconds. Designed to scale reliably for remote health monitoring."
-    }
+      problem:
+        "In remote and resource-constrained clinics, maternal health complications often escalate unchecked due to delayed clinical triage, absence of specialist clinicians, and lack of accessible continuous monitoring platforms that require no smart devices or high-speed internet.",
+      architecture:
+        "The backend streams incoming telephone voice audio via Twilio Media Streams into Google Cloud Speech-to-Text for real-time transcription. Transcribed medical distress signals are processed by an OpenAI agent equipped with strict function schemas (tool-calling) to assess obstetric danger symptoms. High-risk indicators automatically trigger patient record persistence in MongoDB, dispatch emergency alerts to community healthcare workers via Twilio SMS, and generate synthesized voice instructions back to the mother using ElevenLabs.",
+      architectureDiagram: `[Inbound Phone Call] -> (Twilio Media Streams) -> [Raw PCM Audio]
+                                                    |
+                                                    v
+(Google Cloud STT) <--------------------------------+
+        |
+        v [Live Transcript Feed]
+(OpenAI Clinical Agent / Tool Calling Evaluator)
+        |
+        +-- [Severe Risk Flagged] -> (Express Service) -> [MongoDB Atlas]
+        |                                    |
+        v                                    +--> [Twilio SMS to Clinic]
+(ElevenLabs Voice Synthesis) <---------------+
+        |
+        v
+[Reassuring Real-Time Guidance Delivered over Audio Call]`,
+      impact:
+        "Engineered an autonomous voice-to-alert cycle completing in under 3.5 seconds from patient verbal report to clinician SMS alert, functioning reliably over standard cellular networks without requiring smartphone apps.",
+      snippetTitle: "services/risk_evaluator.ts",
+      codeSnippet: `export const evaluateMaternalTelemetry = async (transcript: string) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      { role: "system", content: "Clinical obstetric triage assistant." },
+      { role: "user", content: transcript }
+    ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "escalate_maternal_risk",
+          description: "Trigger emergency hospital dispatch and family notification",
+          parameters: {
+            type: "object",
+            properties: {
+              riskLevel: { type: "string", enum: ["LOW", "MODERATE", "CRITICAL"] },
+              symptoms: { type: "array", items: { type: "string" } },
+              recommendedAction: { type: "string" }
+            },
+            required: ["riskLevel", "symptoms", "recommendedAction"]
+          }
+        }
+      }
+    ],
+    tool_choice: "auto"
+  });
+  return response.choices[0].message;
+};`,
+    },
   },
   {
     title: "NeuroSync Mesh",
+    subtitle: "Decentralized P2P Telemetry Network",
     description:
-      "Offline brainwave mesh network for crisis responders during floods. Anonymously shares focus and stress signals from EEG headbands across a P2P mesh, enabling faster decision-making with no internet dependency.",
-    tags: ["Python", "PyTorch", "Scapy", "SciPy", "Flask", "Plotly", "Raspberry Pi"],
+      "Offline peer-to-peer mesh network built on Raspberry Pi nodes for crisis responders during network blackouts. Crafts custom packets to route real-time EEG stress and focus telemetry across nodes into a live observability dashboard with zero internet dependency.",
+    tags: [
+      "Python",
+      "C++",
+      "PyTorch",
+      "Scapy",
+      "SciPy",
+      "Flask",
+      "Plotly",
+      "Raspberry Pi",
+    ],
+    github: "https://github.com/SudoChips-exe",
     caseStudy: {
-      problem: "During severe floods and natural disasters, standard communication infrastructure often collapses. Crisis responders need a way to monitor team cognitive load and stress levels without relying on cellular networks or the internet.",
-      architecture: "EEG headbands capture brainwave data, which is processed locally on Raspberry Pi nodes using SciPy and PyTorch for stress classification. The nodes communicate over a custom ad-hoc peer-to-peer Wi-Fi mesh network built with Scapy, aggregating the data into a local Flask-served Plotly dashboard for the team lead.",
-      impact: "Successfully implemented a 100% decentralized P2P mesh network capable of transmitting compressed EEG stress classifications across 5+ nodes without any internet routing. Maintained zero packet loss in local proximity tests.",
+      problem:
+        "Environmental disasters such as major floods frequently sever central cellular infrastructure and internet backbones. Emergency search-and-rescue teams operating under high hazard conditions require cognitive fatigue and stress monitoring without relying on centralized cloud infrastructure.",
+      architecture:
+        "Wearable EEG hardware streams raw brainwave voltages directly to Raspberry Pi tactical nodes. The edge nodes process signals using SciPy Butterworth bandpass filters and run a quantized PyTorch model to compute normalized stress and attentiveness metrics. Rather than relying on IP routes, nodes forge ad-hoc 802.11 beacon frames with custom vendor Information Elements using Scapy to broadcast biometric packets across neighboring field nodes. A command post node aggregates these broadcasts into a local Flask and Plotly web dashboard served over direct peer Wi-Fi.",
+      architectureDiagram: `[Wearable EEG] -> [Raspberry Pi Node] -> (SciPy Filter + PyTorch Inference)
+                                                 |
+                                                 v
+[Local Plotly Dashboard] <-- (Ad-Hoc Wi-Fi) <-- (Scapy 802.11 Raw Beacon Broadcast)
+         ^
+         |
+[Peer Responder Nodes 2..N] (Decentralized Multi-hop Mesh)`,
+      impact:
+        "Maintained 0% packet loss across 5+ decentralized physical nodes in field proximity tests. Provided sub-second cognitive telemetry updates to team coordinators under complete cellular blackout conditions.",
       snippetTitle: "mesh_broadcast.py",
-      codeSnippet: `def broadcast_stress_level(stress_score):
-    # Construct a custom beacon frame for the P2P mesh
-    dot11 = Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff",
-                  addr2=mac_address, addr3=mac_address)
+      codeSnippet: `from scapy.all import Dot11, Dot11Beacon, Dot11Elt, RadioTap, sendp
+
+def broadcast_stress_level(stress_score: float, node_id: str, mac_addr: str):
+    """Broadcast biometric telemetry via custom 802.11 beacon frames with vendor IE."""
+    dot11 = Dot11(type=0, subtype=8,
+                  addr1="ff:ff:ff:ff:ff:ff",
+                  addr2=mac_addr,
+                  addr3=mac_addr)
     beacon = Dot11Beacon(cap="ESS+privacy")
     
-    # Embed stress score in custom Information Element
-    essid = Dot11Elt(ID="SSID", info=f"NSync_{stress_score}")
-    frame = RadioTap()/dot11/beacon/essid
+    # Custom vendor payload: Node ID and normalized floating stress metric
+    payload = f"NS:{node_id}:{stress_score:.3f}".encode("utf-8")
+    custom_elt = Dot11Elt(ID=221, info=b"\\x00\\x50\\xf2\\x04" + payload)
     
-    # Broadcast on interface
-    sendp(frame, iface="wlan1", count=1, verbose=False)`
+    frame = RadioTap() / dot11 / beacon / custom_elt
+    sendp(frame, iface="wlan0mon", count=1, verbose=False)`,
+    },
+  },
+  {
+    title: "ClauseZero",
+    subtitle: "Automated Document Evaluation Engine",
+    description:
+      "Full-stack document analysis and retrieval engine that parses complex legal contracts to flag high-risk clauses. Combines a high-throughput Rust lexical parser with Python evaluation pipelines and relational PostgreSQL storage to deliver structured risk insights.",
+    tags: [
+      "Rust",
+      "Python",
+      "PostgreSQL",
+      "TypeScript",
+      "React",
+      "Next.js",
+    ],
+    github: "https://github.com/SudoChips-exe",
+    caseStudy: {
+      problem:
+        "Manual contract evaluation is a major bottleneck for legal and operations teams. Enterprise service agreements and vendor contracts frequently exceed 60 pages, concealing unfavorable indemnification limits, unilateral termination rights, and non-standard warranties that take hours to dissect.",
+      architecture:
+        "Documents are parsed by a specialized Rust lexical analyzer that decomposes complex document structures, isolates hierarchical clause headings, and generates a structured AST of provisions at multi-megabyte-per-second speeds. The structured clause stream is ingested by Python analytical workers using semantic rule engines to score liability exposure and identify predatory covenants. Evaluated clauses are indexed into a normalized PostgreSQL schema with relational queries, powering a high-speed Next.js frontend with clause comparison, risk-level tagging, and recommended renegotiation language.",
+      architectureDiagram: `[Contract PDF / Text] -> (Compiled Rust Lexical Parser)
+                                      |
+                                      v [Hierarchical Clause Graph]
+(Python Semantic Risk Pipeline) <-----+
+        |
+        v [Risk Vector Scoring]
+(PostgreSQL Relational Storage) -> Structured Queries & Audit Trail
+        |
+        v
+[Next.js Responsive Dashboard: Risk Heatmaps & Clause Inspector]`,
+      impact:
+        "Accelerated contract pre-screening workflows by over 80%. Tokenized 60-page legal contracts in under 450ms via compiled Rust and indexed clause compliance with sub-second retrieval times in PostgreSQL.",
+      snippetTitle: "src/clause_parser.rs",
+      codeSnippet: `#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ClauseBlock {
+    pub clause_id: String,
+    pub section_number: String,
+    pub title: Option<String>,
+    pub body_text: String,
+    pub risk_indicators: Vec<String>,
+}
+
+impl ClauseBlock {
+    pub fn parse_document(content: &str) -> Vec<ClauseBlock> {
+        let mut blocks = Vec::new();
+        for section in content.split("\\n\\n") {
+            if let Some(clause) = Self::extract_clause(section) {
+                blocks.push(clause);
+            }
+        }
+        blocks
     }
+}`,
+    },
   },
 ];
 
@@ -141,70 +268,67 @@ export default function Projects() {
   }, [activeProject]);
 
   return (
-    <section id="projects" className="py-28 px-6 bg-[#080d18]">
-      <div className="max-w-5xl mx-auto">
-        <SectionHeader index="03" title="Projects" />
+    <section id="projects" className="bg-white py-20 px-6 border-b border-zinc-100">
+      <div className="max-w-4xl mx-auto">
+        <SectionTitle title="Projects" />
 
-        {projects.length === 0 ? (
-          <div className="surface-card p-16 text-center">
-            <p className="text-slate-500 font-mono text-sm">// projects coming soon</p>
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
-              <div key={project.title} className={`surface-card card-hover p-6 flex flex-col ${index === 0 ? 'sm:col-span-2' : ''}`}>
-                <div className="flex items-start justify-between mb-4">
-                  <svg className="w-7 h-7 text-sky-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                  </svg>
-                  <div className="flex gap-3">
-                    {project.github && (
-                      <a href={project.github} target="_blank" rel="noopener noreferrer"
-                        aria-label="GitHub" className="text-slate-500 hover:text-sky-400 transition-colors">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                        </svg>
-                      </a>
-                    )}
-                    {project.live && (
-                      <a href={project.live} target="_blank" rel="noopener noreferrer"
-                        aria-label="Live demo" className="text-slate-500 hover:text-sky-400 transition-colors">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    )}
-                  </div>
+        <div className="divide-y divide-zinc-100">
+          {projects.map((project) => (
+            <div key={project.title} className="py-8 first:pt-0 last:pb-0">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-1">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-base font-semibold text-zinc-900">
+                    {project.title}
+                  </h3>
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-mono text-zinc-400 hover:text-zinc-900 underline underline-offset-2"
+                      aria-label={`${project.title} on GitHub`}
+                    >
+                      source
+                    </a>
+                  )}
                 </div>
-                <h3 className="text-slate-100 font-semibold mb-2">{project.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed flex-1 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-800">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="text-xs text-sky-400/80 font-mono">{tag}</span>
+                <span className="text-xs font-mono text-zinc-400">
+                  {project.subtitle}
+                </span>
+              </div>
+
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed max-w-3xl my-3">
+                {project.description}
+              </p>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <div className="flex flex-wrap items-center gap-x-2 text-[11px] font-mono text-zinc-400">
+                  {project.tags.map((tag, i) => (
+                    <span key={tag} className="inline-flex items-center">
+                      <span>{tag}</span>
+                      {i < project.tags.length - 1 && <span className="ml-2 select-none">&bull;</span>}
+                    </span>
                   ))}
                 </div>
+
                 {project.caseStudy && (
-                  <div className="mt-4 pt-4 border-t border-slate-800">
-                    <button 
-                      onClick={() => setActiveProject(project)}
-                      className="text-sm text-sky-400 font-medium flex items-center gap-1.5 hover:gap-2 transition-all"
-                    >
-                      View Case Study &rarr;
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => setActiveProject(project)}
+                    className="text-xs text-zinc-900 hover:text-zinc-500 font-medium underline underline-offset-4"
+                  >
+                    Read case study
+                  </button>
                 )}
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Case Study Modal */}
+      {/* Case Study Modal - Plain, Clean White Dialogue */}
       {activeProject && activeProject.caseStudy && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#080d18]/80 backdrop-blur-sm"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-zinc-900/30 backdrop-blur-xs animate-fade-in"
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
@@ -212,65 +336,81 @@ export default function Projects() {
             if (e.target === e.currentTarget) setActiveProject(null);
           }}
         >
-          <div 
-            className="bg-[#0e1628] border border-slate-800 rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl relative animate-fade-in-up"
+          <div
+            className="bg-white border border-zinc-200 rounded-lg w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6 sm:p-8 relative shadow-lg"
             tabIndex={-1}
-            ref={(el) => {
-              if (el) el.focus();
-            }}
           >
-            <button 
+            <button
               onClick={() => setActiveProject(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition-colors"
+              className="absolute top-5 right-5 text-zinc-400 hover:text-zinc-900 p-1 text-sm font-mono"
               aria-label="Close Case Study"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              [close]
             </button>
-            <div className="p-6 sm:p-10">
-              <h3 id="modal-title" className="text-2xl font-bold text-white mb-3">{activeProject.title}</h3>
-              <div className="flex flex-wrap gap-2 mb-8 border-b border-slate-800 pb-6">
-                {activeProject.tags.map((tag) => (
-                  <span key={tag} className="text-xs text-sky-400/80 font-mono bg-sky-400/10 px-2.5 py-1 rounded">{tag}</span>
-                ))}
+
+            <div className="mb-6 pr-12">
+              <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+                Technical Case Study
+              </span>
+              <h3 id="modal-title" className="text-xl sm:text-2xl font-bold text-zinc-950">
+                {activeProject.title}
+              </h3>
+              <p className="text-xs font-mono text-zinc-500 mt-1">
+                {activeProject.subtitle}
+              </p>
+            </div>
+
+            <div className="space-y-6 text-xs sm:text-sm text-zinc-700 leading-relaxed border-t border-zinc-100 pt-6">
+              <div>
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                  The Problem
+                </h4>
+                <p>{activeProject.caseStudy.problem}</p>
               </div>
-              
-              <div className="space-y-8 text-slate-300 leading-relaxed text-[15px]">
-                <div>
-                  <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">The Problem</h4>
-                  <p>{activeProject.caseStudy.problem}</p>
-                </div>
-                <div>
-                  <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">Architecture</h4>
-                  <p className="mb-4">{activeProject.caseStudy.architecture}</p>
-                  {activeProject.caseStudy.architectureDiagram && (
-                    <CopyablePre 
-                      code={activeProject.caseStudy.architectureDiagram} 
-                      className="bg-[#080d18]/50 border border-slate-800/50 p-4 rounded-lg overflow-x-auto text-[13px] font-mono text-slate-400 leading-snug"
-                    />
-                  )}
-                </div>
-                
-                {activeProject.caseStudy.impact && (
-                  <div>
-                    <h4 className="text-emerald-400 font-medium mb-2 uppercase tracking-wider text-[13px]">Impact & Results</h4>
-                    <p className="text-slate-300">{activeProject.caseStudy.impact}</p>
-                  </div>
-                )}
-                
-                {activeProject.caseStudy.codeSnippet && (
-                  <div>
-                    <h4 className="text-sky-400 font-medium mb-2 uppercase tracking-wider text-[13px]">
-                      {activeProject.caseStudy.snippetTitle || "Proof of Work"}
-                    </h4>
-                    <CopyablePre 
-                      code={activeProject.caseStudy.codeSnippet}
-                      className="bg-[#080d18] border border-slate-800 p-4 rounded-lg overflow-x-auto text-[13px] font-mono text-slate-300 leading-relaxed shadow-inner"
-                    />
-                  </div>
+
+              <div>
+                <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                  System Architecture
+                </h4>
+                <p className="mb-3">{activeProject.caseStudy.architecture}</p>
+
+                {activeProject.caseStudy.architectureDiagram && (
+                  <CopyablePre
+                    code={activeProject.caseStudy.architectureDiagram}
+                    className="bg-zinc-950 p-4 rounded text-xs font-mono text-zinc-200 overflow-x-auto leading-snug"
+                  />
                 )}
               </div>
+
+              {activeProject.caseStudy.impact && (
+                <div>
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                    Impact &amp; Results
+                  </h4>
+                  <p>{activeProject.caseStudy.impact}</p>
+                </div>
+              )}
+
+              {activeProject.caseStudy.codeSnippet && (
+                <div>
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2">
+                    Implementation ({activeProject.caseStudy.snippetTitle || "Code"})
+                  </h4>
+                  <CopyablePre
+                    code={activeProject.caseStudy.codeSnippet}
+                    className="bg-zinc-950 p-4 rounded text-xs font-mono text-zinc-200 overflow-x-auto leading-relaxed"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="mt-8 pt-4 border-t border-zinc-100 flex justify-end">
+              <button
+                onClick={() => setActiveProject(null)}
+                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-xs rounded"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

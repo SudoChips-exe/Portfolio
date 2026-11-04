@@ -1,49 +1,14 @@
 "use client";
+
 import { useState } from "react";
-import { SectionHeader } from "./About";
+import { SectionTitle } from "./About";
 
-const socials = [
-  {
-    label: "GitHub",
-    href: "https://github.com/SudoChips-exe",
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-      </svg>
-    ),
-  },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/amaechi-chibueze-23580a3a0",
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-      </svg>
-    ),
-  },
-  {
-    label: "X",
-    href: "https://x.com/AEmmanuel61947",
-    icon: (
-      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-      </svg>
-    ),
-  },
-  {
-    label: "Email",
-    href: "mailto:amaechichibueze85@gmail.com",
-    icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-  },
+const links = [
+  { label: "Email", href: "mailto:amaechichibueze85@gmail.com", text: "amaechichibueze85@gmail.com" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/sudochipsdv", text: "linkedin.com/in/sudochipsdv" },
+  { label: "GitHub", href: "https://github.com/SudoChips-exe", text: "github.com/SudoChips-exe" },
+  { label: "X", href: "https://x.com/AEmmanuel61947", text: "@AEmmanuel61947" },
 ];
-
-const inputClass =
-  "w-full px-4 py-2.5 bg-[#080d18] border border-slate-800 focus:border-sky-500/50 text-slate-200 placeholder-slate-600 rounded-lg outline-none transition-colors text-sm";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -62,65 +27,118 @@ export default function Contact() {
       if (res.ok) {
         setStatus("sent");
         setForm({ name: "", email: "", message: "" });
-        setTimeout(() => setStatus("idle"), 5000); // Reset after 5s
+        setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
-        setErrorMessage("Something went wrong. Please try again later.");
+        setErrorMessage("Transmission could not be delivered. Please send an email directly.");
       }
     } catch {
       setStatus("error");
-      setErrorMessage("Network error. Please check your connection.");
+      setErrorMessage("Network error. Please reach out directly via email.");
     }
   };
 
-  return (
-    <section id="contact" className="py-28 px-6 bg-[#0e1628]">
-      <div className="max-w-5xl mx-auto">
-        <SectionHeader index="04" title="Get In Touch" />
+  const inputClass =
+    "w-full px-3 py-2 bg-white border border-zinc-200 focus:border-zinc-900 text-zinc-900 placeholder-zinc-400 rounded outline-none text-xs sm:text-sm font-sans transition-colors";
 
-        <div className="grid md:grid-cols-2 gap-16">
-          <div>
-            <p className="text-slate-400 text-[15px] leading-relaxed mb-8">
-              Have a project in mind, want to collaborate, or just want to say hi?
-              My inbox is open — I&apos;ll get back to you as soon as I can.
+  return (
+    <section id="contact" className="bg-white py-20 px-6">
+      <div className="max-w-4xl mx-auto">
+        <SectionTitle title="Contact" />
+
+        <div className="grid md:grid-cols-12 gap-12 items-start">
+          {/* Coordinates */}
+          <div className="md:col-span-5 space-y-4">
+            <p className="text-zinc-600 text-xs sm:text-sm leading-relaxed">
+              Open to technical conversations, systems programming research, and production AI engineering opportunities.
             </p>
-            <div className="flex gap-3">
-              {socials.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="p-2.5 surface-card text-slate-500 hover:text-sky-400 hover:border-sky-500/30 rounded-lg transition-all duration-200">
-                  {s.icon}
-                </a>
+
+            <div className="space-y-2 pt-2 text-xs font-mono">
+              {links.map((link) => (
+                <div key={link.label} className="flex items-baseline gap-3">
+                  <span className="text-zinc-400 w-16">{link.label}</span>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-900 hover:text-zinc-500 underline underline-offset-2"
+                  >
+                    {link.text}
+                  </a>
+                </div>
               ))}
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <input type="text" placeholder="Name" value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required className={inputClass} />
-            <input type="email" placeholder="Email" value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              required className={inputClass} />
-            <textarea placeholder="Message" rows={5} value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              required className={`${inputClass} resize-none`} />
-            {status === "error" && (
-              <div className="px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm animate-fade-in-up">
-                {errorMessage}
+          {/* Simple Clean Form */}
+          <div className="md:col-span-7">
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <label htmlFor="contact-name" className="block text-xs font-mono text-zinc-500 mb-1">
+                  Name
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  placeholder="Your Name"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  required
+                  className={inputClass}
+                />
               </div>
-            )}
-            {status === "sent" && (
-              <div className="px-4 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-400 text-sm animate-fade-in-up flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                Message sent successfully!
+
+              <div>
+                <label htmlFor="contact-email" className="block text-xs font-mono text-zinc-500 mb-1">
+                  Email
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  placeholder="you@domain.com"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  required
+                  className={inputClass}
+                />
               </div>
-            )}
-            <button type="submit" disabled={status === "sending" || status === "sent"}
-              className="w-full py-2.5 bg-sky-500 hover:bg-sky-400 disabled:opacity-50 text-[#080d18] font-semibold text-sm rounded-lg transition-colors duration-200">
-              {status === "sending" ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+
+              <div>
+                <label htmlFor="contact-message" className="block text-xs font-mono text-zinc-500 mb-1">
+                  Message
+                </label>
+                <textarea
+                  id="contact-message"
+                  placeholder="Your message..."
+                  rows={4}
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  required
+                  className={`${inputClass} resize-none`}
+                />
+              </div>
+
+              {status === "error" && (
+                <div className="p-2.5 bg-red-50 text-red-700 text-xs font-mono rounded">
+                  {errorMessage}
+                </div>
+              )}
+
+              {status === "sent" && (
+                <div className="p-2.5 bg-emerald-50 text-emerald-800 text-xs font-mono rounded">
+                  Message sent successfully.
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === "sending" || status === "sent"}
+                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 text-white text-xs font-medium rounded transition-colors"
+              >
+                {status === "sending" ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </section>
